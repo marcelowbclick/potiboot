@@ -1,0 +1,83 @@
+::	Levantando Servidor Web (localhost)
+	ambiente Windows.
+::
+
+<<Software: Xampp>>
+
+1º - Configurar o Apache
+2º - Instalar biblioteca xdebug
+3º - Instalar certificado SSL
+
+------------------------------------
+
+1º - Configurar o Apache
+	
+    |A-> Configurar arquivo "php.ini" (C:\xampp\php\php.ini)
+    |   	
+    |	-> A1 - Setar quantidade de memória ( memory_limit=128M ) 
+    |	-> A2 - mensagens de erro ambiente dev ( error_reporting=E_ALL )
+    	( display_errors=On )
+    |	-> A3 - Setar timezone para ( date.timezone= America/Sao_Paulo )
+    |	-> A4 - Ativar extensão openssl ( extension=php_openssl.dll )
+    	( extension=openssl ) 
+
+    |B-> Configurar arquivo "httpd.conf" (C:\xampp\apache\conf\httpd.config)
+    |	
+    |	-> B1 - Listen 80
+    |	-> B2 - Habilitar módulo de reescrita da URL ( LoadModule rewrite_module modules/mod_rewrite.so )
+    |	-> B3 - Alterar "User daemon" para (User seu-usuario)
+
+
+2º -  Instalando a biblioteca Xdebug
+
+    |A1-> Acessar Página do Xdebug (https://xdebug.org/wizard.php)
+    |A2-> Colar conteúdo da página php.info no campo acima ( rodar analize ) 
+    |A3-> Download php_xdebug-2.9.5-7.2-vc15-x86_64.dll
+	( http://xdebug.org/files/php_xdebug-2.9.5-7.2-vc15-x86_64.dll )
+    |A4-> Mova o download para (C:\xampp\php\ext)
+    |A5-> Adicione essa linha 
+	"zend_extension = C:\xampp\php\ext\php_xdebug-2.9.5-7.2-vc15-x86_64.dll"
+ 	no arquivo php.ini (C:\xampp\php\php.ini )
+
+
+
+3º - Instalando Certificado SSL
+
+    |A1-> Criar arquivo com nome de "v3.ext" na pasta (C:\xampp\apache)
+    |A2-> colocar as seguintes informações e salvar
+(((-  authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+ 
+[alt_names]
+DNS.1 = localhost   -)))
+    |A3-> Editar arquivo "makecert.bat" adicionando (500 -sha256 -extfile v3.ext)
+	ao final da linha 10.
+    |A4-> Entre na pasta (cd C:\xampp\apache) pelo cmd
+    |A5-> Executrar comando "makecert"
+	Country Name: BR
+
+State: Deixe em branco
+
+Locality: Deixe em branco
+
+Organization: CEO
+
+Organizational: Deixe em branco
+
+Common: localhost
+
+Email: Deixe em branco
+
+A challenge password []: Deixe em branco
+
+An optional company name []: Deixe em branco
+
+Enter pass phrase for privkey.pem: A mesma senha que digitou lá em cima
+
+    |A6-> Abra o Executar do windows (Windows + r), digite certmgr.msc e dê enter.
+    |A7->Vai abrir uma nova janela, clique em Autoridade de Certificação Raiz Confiáveis
+	 depois botão direito em Certificados -> Todas as tarefas -> Importar
+    |A8->Importar certificado de C:\campp\apache\conf\ssl.crt
+    
